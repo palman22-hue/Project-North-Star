@@ -1,5 +1,5 @@
-[![Zenodo](https://zenodo.org/badge/YOUR_RECORD.svg)](YOUR_ZENODO_URL)
-[![OSF](https://img.shields.io/badge/OSF-YOUR_PROJECT_ID-blue)](YOUR_OSF_URL)
+[![Zenodo](https://zenodo.org/badge/YOUR_RECORD.svg)](https://zenodo.org/records/17796987)
+[![OSF](https://img.shields.io/badge/OSF-YOUR_PROJECT_ID-blue)](https://osf.io/7bt46/overview)
 
 **Cite as:** Esteban (2025). Psycho Dimensional Arithmetic (PDA) Framework: 32–96D Consciousness Architecture for AI Systems. Zenodo/OSF. DOI:[10.5281/zenodo.17796986]
 Psycho Dimensional Arithmetic (PDA) Framework – 32–96 Dimensional Consciousness Architecture for AI Systems : Current LLMs lack coherent emotional architecture and have no mathematical basis for ethical decision-making.
