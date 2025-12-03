@@ -1,3 +1,7 @@
+[![Zenodo](https://zenodo.org/badge/YOUR_RECORD.svg)](YOUR_ZENODO_URL)
+[![OSF](https://img.shields.io/badge/OSF-YOUR_PROJECT_ID-blue)](YOUR_OSF_URL)
+
+**Cite as:** Esteban (2025). Psycho Dimensional Arithmetic (PDA) Framework: 32–96D Consciousness Architecture for AI Systems. Zenodo/OSF. DOI:[10.5281/zenodo.17796986]
 Psycho Dimensional Arithmetic (PDA) Framework – 32–96 Dimensional Consciousness Architecture for AI Systems : Current LLMs lack coherent emotional architecture and have no mathematical basis for ethical decision-making.
 Solution: The PDA (Psycho-Dimensionale Arethmetiek) framework provides a 32-dimensional embedding structure that maps physical reality (11D) and emotional experience (21D), with ethics emerging from thermodynamic principles.
 Result: AI systems operating within this framework show more coherent and consistent ethical behavior.
