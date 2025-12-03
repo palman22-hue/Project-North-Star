@@ -1,4 +1,4 @@
-[![Zenodo](https://zenodo.org/badge/YOUR_RECORD.svg)](https://zenodo.org/records/17796987)
+[![Zenodo](https://zenodo.org/badge/17796986.svg)](https://zenodo.org/records/17796987)
 [![OSF](https://img.shields.io/badge/OSF-7bt46)](https://osf.io/7bt46/overview)
 
 **Cite as:** 
