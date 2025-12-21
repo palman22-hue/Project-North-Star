@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDA32D - Persoonlijke 32D Assistent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 20px;
+            height: calc(100vh - 40px);
+        }
+
+        /* Left Panel - Chat */
+        .chat-panel {
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            background: linear-gradient(90deg, #4CAF50, #2196F3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #888;
+            font-size: 14px;
+        }
+
+        #chat {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            scroll-behavior: smooth;
+        }
+
+        #chat::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #chat::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        #chat::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message-header {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .message.user .message-header {
+            color: #2196F3;
+        }
+
+        .message.pda .message-header {
+            color: #4CAF50;
+        }
+
+        .message-content {
+            padding: 12px 16px;
+            border-radius: 12px;
+            line-height: 1.6;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            margin-left: 40px;
+        }
+
+        .message.pda .message-content {
+            background: linear-gradient(135deg, #134e4a 0%, #2d6a4f 100%);
+            margin-right: 40px;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        #input {
+            flex: 1;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        #input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #4CAF50;
+        }
+
+        #input::placeholder {
+            color: #666;
+        }
+
+        #send {
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        #send:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+        }
+
+        #send:active {
+            transform: translateY(0);
+        }
+
+        /* Right Panel - State Visualization */
+        .state-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .state-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .state-card h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #4CAF50;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        .metric-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .metric-value.high {
+            color: #4CAF50;
+        }
+
+        .metric-value.medium {
+            color: #FFC107;
+        }
+
+        .metric-value.low {
+            color: #f44336;
+        }
+
+        #state-canvas {
+            width: 100%;
+            height: 120px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            margin-top: 10px;
+        }
+
+        .emotion-list {
+            margin-top: 10px;
+        }
+
+        .emotion-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .emotion-label {
+            flex: 1;
+            font-size: 13px;
+        }
+
+        .emotion-bar {
+            width: 100px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-left: 10px;
+        }
+
+        .emotion-fill {
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+
+        .emotion-fill.positive {
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+        }
+
+        .emotion-fill.negative {
+            background: linear-gradient(90deg, #f44336, #FF5722);
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .state-panel {
+                order: -1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Chat Panel -->
+        <div class="chat-panel">
+            <div class="header">
+                <h1>PDA32D</h1>
+                <p>Persoonlijke 32D-assistent voor emoties, waarden en intenties</p>
+            </div>
+            
+            <div id="chat">
+                <div class="message pda">
+                    <div class="message-header">PDA32D</div>
+                    <div class="message-content">
+                        Welkom bij PDA32D. Waar wil je vandaag samen naar kijken?
+                    </div>
+                </div>
+            </div>
+            
+            <div class="input-area">
+                <input type="text" id="input" placeholder="Typ je bericht..." />
+                <button id="send">Verstuur</button>
+            </div>
+        </div>
+
+        <!-- State Panel -->
+        <div class="state-panel">
+            <!-- Coherence Card -->
+            <div class="state-card">
+                <h2>Interne Staat</h2>
+                <div class="metric">
+                    <span class="metric-label">Coherence</span>
+                    <span class="metric-value high" id="coherence">1.000</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Status</span>
+                    <span class="metric-value" id="status">Neutraal</span>
+                </div>
+                <canvas id="state-canvas"></canvas>
+            </div>
+
+            <!-- Active Emotions Card -->
+            <div class="state-card">
+                <h2>Actieve Emoties</h2>
+                <div id="emotions" class="emotion-list">
+                    <p style="color: #666; font-size: 13px;">Geen emoties gedetecteerd</p>
+                </div>
+            </div>
+
+            <!-- Dimensions Card -->
+            <div class="state-card">
+                <h2>Top Dimensies</h2>
+                <div class="metric">
+                    <span class="metric-label">Joy (dim 0)</span>
+                    <span class="metric-value" id="dim-joy">0.000</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Fear (dim 6)</span>
+                    <span class="metric-value" id="dim-fear">0.000</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Sadness (dim 12)</span>
+                    <span class="metric-value" id="dim-sadness">0.000</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chat = document.getElementById('chat');
+        const input = document.getElementById('input');
+        const sendBtn = document.getElementById('send');
+        const sessionId = 'web-' + Date.now();
+
+        // Send message function
+        async function sendMessage() {
+            const text = input.value.trim();
+            if (!text) return;
+
+            // Add user message
+            addMessage('user', text);
+            input.value = '';
+
+            try {
+                // Send to API
+                const response = await fetch('/turn', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_id: sessionId, user_text: text })
+                });
+
+                const data = await response.json();
+                console.log('API Response:', data);
+
+                // Add PDA response
+                addMessage('pda', data.assistant_text);
+
+                // Update state visualization
+                if (data.coherence !== undefined && data.state_vector) {
+                    updateState(data.coherence, data.state_vector);
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                addMessage('pda', 'Sorry, er ging iets mis. Probeer het opnieuw.');
+            }
+        }
+
+        // Add message to chat
+        function addMessage(role, text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+            messageDiv.innerHTML = `
+                <div class="message-header">${role === 'user' ? 'Jij' : 'PDA32D'}</div>
+                <div class="message-content">${text}</div>
+            `;
+            chat.appendChild(messageDiv);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        // Update state visualization
+        function updateState(coherence, stateVector) {
+            // Update coherence
+            const coherenceEl = document.getElementById('coherence');
+            coherenceEl.textContent = coherence.toFixed(3);
+            
+            // Color code coherence
+            if (coherence > 0.8) {
+                coherenceEl.className = 'metric-value high';
+            } else if (coherence > 0.5) {
+                coherenceEl.className = 'metric-value medium';
+            } else {
+                coherenceEl.className = 'metric-value low';
+            }
+
+            // Update status
+            const statusEl = document.getElementById('status');
+            if (coherence > 0.9) {
+                statusEl.textContent = 'Neutraal';
+                statusEl.className = 'metric-value high';
+            } else if (coherence > 0.6) {
+                statusEl.textContent = 'Actief';
+                statusEl.className = 'metric-value medium';
+            } else {
+                statusEl.textContent = 'Complex';
+                statusEl.className = 'metric-value low';
+            }
+
+            // Update dimension values
+            document.getElementById('dim-joy').textContent = stateVector[0].toFixed(3);
+            document.getElementById('dim-fear').textContent = stateVector[6].toFixed(3);
+            document.getElementById('dim-sadness').textContent = stateVector[12].toFixed(3);
+
+            // Draw state vector
+            drawStateVector(stateVector);
+
+            // Update active emotions
+            updateEmotions(stateVector);
+        }
+
+        // Draw state vector on canvas
+        function drawStateVector(vector) {
+            const canvas = document.getElementById('state-canvas');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width = canvas.offsetWidth;
+            const height = canvas.height = canvas.offsetHeight;
+
+            ctx.clearRect(0, 0, width, height);
+
+            const barWidth = width / 32;
+            const centerY = height / 2;
+
+            vector.forEach((val, i) => {
+                const barHeight = Math.abs(val) * centerY * 0.8;
+                const x = i * barWidth;
+                const y = val > 0 ? centerY - barHeight : centerY;
+
+                ctx.fillStyle = val > 0 
+                    ? `rgba(76, 175, 80, ${Math.abs(val)})` 
+                    : `rgba(244, 67, 54, ${Math.abs(val)})`;
+                
+                ctx.fillRect(x, y, barWidth - 1, barHeight);
+            });
+
+            // Draw center line
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, centerY);
+            ctx.lineTo(width, centerY);
+            ctx.stroke();
+        }
+
+        // Update active emotions display
+        function updateEmotions(vector) {
+            const emotionsDiv = document.getElementById('emotions');
+            const emotions = [
+                { name: 'Joy', index: 0 },
+                { name: 'Trust', index: 3 },
+                { name: 'Fear', index: 6 },
+                { name: 'Surprise', index: 9 },
+                { name: 'Sadness', index: 12 },
+                { name: 'Disgust', index: 15 },
+                { name: 'Anger', index: 18 },
+                { name: 'Anticipation', index: 21 }
+            ];
+
+            const activeEmotions = emotions
+                .map(e => ({ ...e, value: vector[e.index] }))
+                .filter(e => Math.abs(e.value) > 0.1)
+                .sort((a, b) => Math.abs(b.value) - Math.abs(a.value))
+                .slice(0, 5);
+
+            if (activeEmotions.length === 0) {
+                emotionsDiv.innerHTML = '<p style="color: #666; font-size: 13px;">Geen sterke emoties</p>';
+                return;
+            }
+
+            emotionsDiv.innerHTML = activeEmotions.map(e => `
+                <div class="emotion-item">
+                    <span class="emotion-label">${e.name}</span>
+                    <div class="emotion-bar">
+                        <div class="emotion-fill ${e.value > 0 ? 'positive' : 'negative'}" 
+                             style="width: ${Math.abs(e.value) * 100}%"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Event listeners
+        sendBtn.addEventListener('click', sendMessage);
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // Initialize
+        console.log('PDA32D geïnitialiseerd. Session ID:', sessionId);
+    </script>
+</body>
+</html>
