@@ -1,0 +1,5 @@
+@echo off
+echo Starting Project North Star...
+call venv\Scripts\activate.bat
+python api.py
+pause
