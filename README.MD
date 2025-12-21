@@ -1,3 +1,5 @@
+![alt text](image.png)
+
 # Project North Star
 
 ## Setup
