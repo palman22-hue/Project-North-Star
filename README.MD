@@ -1,6 +1,8 @@
 ![alt text](image.png)
 
-# Project North Star
+# Ethical AI framework with transparent, 32D emotional state tracking for aligned PDAs
+
+https://dev.to/palman22hue/built-a-32d-emotional-state-tracking-system-for-transparent-ethical-ai-now-open-source-gplv3-1doa
 
 ## Setup
 
