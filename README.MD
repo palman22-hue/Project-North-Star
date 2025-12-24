@@ -7,7 +7,7 @@ Personal Digital Agent with modular cognition, ethical reasoning, and emotional 
 ## 🚀 Installation
 
 ### 📦 Option 1: Installer (Windows only)
-Download the latest release from [GitHub Releases](https://github.com/yourusername/PDA/releases)  
+Download the latest release from [GitHub Releases](https://github.com/palman22-hue/PDA-TruthForge/releases)  
 Run `PDA_Agent_Installer.exe` and follow the instructions.
 
 > ⚠ Requirements:
@@ -17,7 +17,7 @@ Run `PDA_Agent_Installer.exe` and follow the instructions.
 
 ### 🛠 Option 2: Manual setup
 ```bash
-git clone https://github.com/yourusername/PDA.git
+git clone https://github.com/palman22-hue/PDA-TruthForge
 cd PDA
 pip install -r requirements.txt
 python api.py
@@ -42,8 +42,8 @@ pda_agent_gui.ps1 — GUI launcher
 PDA_Agent_Installer.iss — installer script
 
 🛡 License & Credits
-This project is open-source and distributed under the MIT License.
-Created by Ezekiel — system architect, storyteller, and agent‑maker.
+This project is open-source and distributed under the GPLv3 License.
+Created by Esteban Palman — system architect, storyteller, and agent‑maker.
 
 
 ---
